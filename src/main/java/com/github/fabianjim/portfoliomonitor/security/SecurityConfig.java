@@ -6,8 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 /*
-temp -- allow all API calls
-        disable csrf
+While in initial development, allow all API calls, disable csrf
  */
 @Configuration
 public class SecurityConfig {
