@@ -1,0 +1,5 @@
+# The Tiingo API token should be set as an environment variable or in run configurations.
+
+tiingo-api-token=${TIINGO_API_TOKEN}
+
+spring.application.name=portfolio-monitor
