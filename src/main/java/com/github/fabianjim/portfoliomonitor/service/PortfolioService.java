@@ -1,8 +1,8 @@
 package com.github.fabianjim.portfoliomonitor.service;
 
 import com.github.fabianjim.portfoliomonitor.api.MarketDataClient;
-import com.github.fabianjim.portfoliomonitor.api.TiingoClient;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.fabianjim.portfoliomonitor.model.Holding;
+import com.github.fabianjim.portfoliomonitor.model.Stock;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,12 +12,19 @@ public class PortfolioService {
 
     private final MarketDataClient marketDataClient;
 
-    @Autowired
     public PortfolioService(MarketDataClient marketDataClient) {
         this.marketDataClient = marketDataClient;
     }
 
     public void updatePortfolio(Portfolio portfolio) {
+        if (portfolio != null && portfolio.getHoldings() != null) {
+            for (Holding holding : portfolio.getHoldings()) {
+                if (holding != null && holding.getTicker() != null) {
+                    Stock stock = marketDataClient.getStockData(holding.getTicker());
+                    holding.setStock(stock);
+                }
+            }
+        }
         this.currentPortfolio = portfolio;
     }
 

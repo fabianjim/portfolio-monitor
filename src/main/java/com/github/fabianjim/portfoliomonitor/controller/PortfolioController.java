@@ -3,7 +3,6 @@ package com.github.fabianjim.portfoliomonitor.controller;
 import com.github.fabianjim.portfoliomonitor.model.Holding;
 import com.github.fabianjim.portfoliomonitor.service.Portfolio;
 import com.github.fabianjim.portfoliomonitor.service.PortfolioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +13,6 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
-    @Autowired
     public PortfolioController(PortfolioService portfolioService) {
         this.portfolioService = portfolioService;
     }
@@ -25,7 +23,8 @@ public class PortfolioController {
 
     @GetMapping("/holdings")
     public List<Holding> fetchHoldings() {
-        return portfolioService.getCurrentPortfolio().getHoldings();
+        Portfolio current = portfolioService.getCurrentPortfolio();
+        return current != null ? current.getHoldings() : List.of();
     }
 
 

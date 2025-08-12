@@ -3,6 +3,9 @@ package com.github.fabianjim.portfoliomonitor.model;
 public class Holding {
     private String ticker;
     private int shares;
+    private Stock stock;
+
+    public Holding() {}
 
     public Holding(String ticker, int shares) {
         this.ticker = ticker;
@@ -23,5 +26,13 @@ public class Holding {
 
     public void setShares(int shares) {
         this.shares = shares;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 }
