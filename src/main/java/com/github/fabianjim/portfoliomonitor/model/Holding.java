@@ -1,15 +1,38 @@
 package com.github.fabianjim.portfoliomonitor.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "holdings")
 public class Holding {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
+    @Column(nullable = false)
     private String ticker;
-    private int shares;
+    
+    @Column(nullable = false)
+    private double shares;
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "stock_id")
     private Stock stock;
 
     public Holding() {}
 
-    public Holding(String ticker, int shares) {
+    public Holding(String ticker, double shares) {
         this.ticker = ticker;
         this.shares = shares;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTicker() {
@@ -20,11 +43,11 @@ public class Holding {
         this.ticker = ticker;
     }
 
-    public int getShares() {
+    public double getShares() {
         return shares;
     }
 
-    public void setShares(int shares) {
+    public void setShares(double shares) {
         this.shares = shares;
     }
 

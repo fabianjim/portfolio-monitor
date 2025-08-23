@@ -90,8 +90,6 @@ export default function Portfolio() {
           <input
             placeholder="Shares"
             type="number"
-            min={0}
-            step={1}
             value={h.shares}
             onChange={(e) => updateHolding(idx, { ...h, shares: e.target.value })}
             style={{ padding: 8, width: 120 }}

@@ -1,15 +1,35 @@
 package com.github.fabianjim.portfoliomonitor.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "stocks")
 public class Stock {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(unique = true, nullable = false)
     private String ticker;
+    
+    @Column(nullable = false)
     private String timestamp;
+    
+    @Column(name = "current_price", nullable = false)
     private double currentPrice;
+    
+    @Column(nullable = false)
     private double open;
+    
+    @Column(name = "prev_close", nullable = false)
     private double prevClose;
+    
+    @Column(nullable = false)
     private double high;
+    
+    @Column(nullable = false)
     private double low;
-    //TODO: Implement shares. User must input their number of shares owned
 
     public Stock() {};
     public Stock(String ticker, String timestamp, double currentPrice, double open, double prevClose, double high, double low) {
@@ -22,6 +42,13 @@ public class Stock {
         this.low = low;
     };
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setTicker(String ticker) {
         this.ticker = ticker;
