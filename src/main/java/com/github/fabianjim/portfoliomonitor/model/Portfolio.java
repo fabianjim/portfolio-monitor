@@ -1,6 +1,5 @@
-package com.github.fabianjim.portfoliomonitor.service;
+package com.github.fabianjim.portfoliomonitor.model;
 
-import com.github.fabianjim.portfoliomonitor.model.Holding;
 import jakarta.persistence.*;
 
 import java.util.List;

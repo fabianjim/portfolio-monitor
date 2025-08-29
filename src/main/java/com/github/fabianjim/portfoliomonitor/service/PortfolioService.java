@@ -2,6 +2,7 @@ package com.github.fabianjim.portfoliomonitor.service;
 
 import com.github.fabianjim.portfoliomonitor.api.MarketDataClient;
 import com.github.fabianjim.portfoliomonitor.model.Holding;
+import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
 import com.github.fabianjim.portfoliomonitor.repository.HoldingRepository;
 import com.github.fabianjim.portfoliomonitor.repository.PortfolioRepository;

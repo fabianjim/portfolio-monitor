@@ -1,7 +1,7 @@
 package com.github.fabianjim.portfoliomonitor.controller;
 
 import com.github.fabianjim.portfoliomonitor.model.Holding;
-import com.github.fabianjim.portfoliomonitor.service.Portfolio;
+import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.service.PortfolioService;
 import org.springframework.web.bind.annotation.*;
 
