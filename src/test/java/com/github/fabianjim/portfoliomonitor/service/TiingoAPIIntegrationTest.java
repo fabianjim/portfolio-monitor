@@ -15,13 +15,11 @@ import static org.mockito.Mockito.when;
 public class TiingoAPIIntegrationTest {
 
     @Autowired
-    private PortfolioService portfolioService;
-    @Autowired
     private TiingoClient tiingoClient;
 
     @Test
     void testConnectionToTiingo() {
-        String response = portfolioService.testMarketDataClient();
+        String response = tiingoClient.testConnection();
         assertNotNull(response);
         System.out.println(response);
         assertTrue(response.contains("You successfully sent a request"));

@@ -12,13 +12,18 @@ public class Portfolio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "portfolio_id")
     private List<Holding> holdings;
 
     public Portfolio() {};
 
-    public Portfolio(List<Holding> holdings) {
+    public Portfolio(User user, List<Holding> holdings) {
+        this.user = user;
         this.holdings = holdings;
     }
 
@@ -36,5 +41,13 @@ public class Portfolio {
 
     public void setHoldings(List<Holding> holdings) {
         this.holdings = holdings;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

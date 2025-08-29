@@ -16,15 +16,15 @@ public class Holding {
     @Column(nullable = false)
     private double shares;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
+    @Column(name = "average_cost", nullable = false)
+    private double averageCost;
 
     public Holding() {}
 
-    public Holding(String ticker, double shares) {
+    public Holding(String ticker, double shares, double averageCost) {
         this.ticker = ticker;
         this.shares = shares;
+        this.averageCost = averageCost;
     }
 
     public int getId() {
@@ -51,11 +51,11 @@ public class Holding {
         this.shares = shares;
     }
 
-    public Stock getStock() {
-        return stock;
+    public double getAverageCost() {
+        return averageCost;
     }
 
-    public void setStock(Stock stock) {
-        this.stock = stock;
+    public void setAverageCost(double averageCost) {
+        this.averageCost = averageCost;
     }
 }

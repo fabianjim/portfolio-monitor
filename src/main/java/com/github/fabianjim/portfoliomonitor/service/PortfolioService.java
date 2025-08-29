@@ -1,12 +1,9 @@
 package com.github.fabianjim.portfoliomonitor.service;
 
-import com.github.fabianjim.portfoliomonitor.api.MarketDataClient;
 import com.github.fabianjim.portfoliomonitor.model.Holding;
 import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
-import com.github.fabianjim.portfoliomonitor.repository.HoldingRepository;
 import com.github.fabianjim.portfoliomonitor.repository.PortfolioRepository;
-import com.github.fabianjim.portfoliomonitor.repository.StockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,45 +13,23 @@ import java.util.List;
 @Transactional
 public class PortfolioService {
 
-    private final MarketDataClient marketDataClient;
     private final PortfolioRepository portfolioRepository;
-    private final HoldingRepository holdingRepository;
-    private final StockRepository stockRepository;
+    private final StockService stockService;
 
-    public PortfolioService(MarketDataClient marketDataClient, 
-                          PortfolioRepository portfolioRepository,
-                          HoldingRepository holdingRepository,
-                          StockRepository stockRepository) {
-        this.marketDataClient = marketDataClient;
+    public PortfolioService(PortfolioRepository portfolioRepository,
+                          StockService stockService) {
         this.portfolioRepository = portfolioRepository;
-        this.holdingRepository = holdingRepository;
-        this.stockRepository = stockRepository;
+        this.stockService = stockService;
     }
 
     public void updatePortfolio(Portfolio portfolio) {
         if (portfolio != null && portfolio.getHoldings() != null) {
-            for (Holding holding : portfolio.getHoldings()) {
-                if (holding != null && holding.getTicker() != null) {
-                    // Fetch fresh market data
-                    Stock marketData = marketDataClient.getStockData(holding.getTicker());
-                    
-                    // Save or update the stock data
-                    Stock existingStock = stockRepository.findByTicker(holding.getTicker()).orElse(null);
-                    if (existingStock != null) {
-                        // Update existing stock with new market data
-                        existingStock.setCurrentPrice(marketData.getCurrentPrice());
-                        existingStock.setOpen(marketData.getOpen());
-                        existingStock.setPrevClose(marketData.getPrevClose());
-                        existingStock.setHigh(marketData.getHigh());
-                        existingStock.setLow(marketData.getLow());
-                        existingStock.setTimestamp(marketData.getTimestamp());
-                        holding.setStock(stockRepository.save(existingStock));
-                    } else {
-                        // Save new stock
-                        holding.setStock(stockRepository.save(marketData));
-                    }
-                }
-            }
+            List<String> tickers = portfolio.getHoldings().stream()
+                .map(Holding::getTicker)
+                .distinct()
+                .toList();
+            
+            stockService.updateMultipleStocks(tickers);
             
             portfolioRepository.save(portfolio);
         }
@@ -64,10 +39,13 @@ public class PortfolioService {
         List<Portfolio> portfolios = portfolioRepository.findAll();
         return portfolios.isEmpty() ? null : portfolios.get(0);
     }
+    
+    public Stock getStockData(String ticker) {
+        return stockService.getLatestStockData(ticker).orElse(null);
+    }
 
-    public String testMarketDataClient() {
-        return marketDataClient.testConnection();
-
+    public Stock getStockData(String ticker, String timestamp) {
+        return stockService.getStockData(ticker, timestamp).orElse(null);
     }
 
 }

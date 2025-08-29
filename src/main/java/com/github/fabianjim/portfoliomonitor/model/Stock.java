@@ -3,14 +3,15 @@ package com.github.fabianjim.portfoliomonitor.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "stocks")
+@Table(name = "stocks", 
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp"})})
 public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String ticker;
     
     @Column(nullable = false)
