@@ -1,7 +1,6 @@
 package com.github.fabianjim.portfoliomonitor.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -17,8 +16,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Portfolio> portfolios;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Portfolio portfolio;
 
     public User () {}
 
@@ -35,12 +34,12 @@ public class User {
         this.id = id;
     }
 
-    public List<Portfolio> getPortfolios() {
-        return portfolios;
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
 
-    public void setPortfolios(List<Portfolio> portfolios) {
-        this.portfolios = portfolios;
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
     }
 
     public String getUsername() {
