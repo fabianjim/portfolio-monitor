@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Stock = {
   ticker: string
@@ -17,6 +18,7 @@ type Holding = {
 }
 
 export default function Portfolio() {
+  const navigate = useNavigate()
   const [holdings, setHoldings] = useState<Array<{ ticker: string; shares: string }>>([
     { ticker: '', shares: '' },
   ])
@@ -28,6 +30,20 @@ export default function Portfolio() {
   const removeHolding = (idx: number) => setHoldings(holdings.filter((_, i) => i !== idx))
   const updateHolding = (idx: number, updated: { ticker: string; shares: string }) =>
     setHoldings(holdings.map((h, i) => (i === idx ? updated : h)))
+
+  const handleLogout = () => {
+    // Clear any stored authentication data (if you're using localStorage/sessionStorage)
+    // localStorage.removeItem('authToken')
+    // sessionStorage.clear()
+    
+    // Reset component state
+    setHoldings([{ ticker: '', shares: '' }])
+    setResults([])
+    setError('')
+    
+    // Navigate back to login
+    navigate('/login')
+  }
 
   const validate = (): string => {
     if (holdings.length === 0) return 'Add at least one holding'
@@ -75,7 +91,23 @@ export default function Portfolio() {
 
   return (
     <div style={{ maxWidth: 960, margin: '24px auto', padding: '0 12px' }}>
-      <h2>Portfolio</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <h2 style={{ margin: 0 }}>Portfolio</h2>
+        <button 
+          onClick={handleLogout}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#dc3545',
+            color: 'white',
+            border: 'none',
+            borderRadius: 4,
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Logout
+        </button>
+      </div>
       
 
       {holdings.map((h, idx) => (
