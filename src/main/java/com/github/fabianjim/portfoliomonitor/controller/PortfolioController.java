@@ -21,12 +21,21 @@ public class PortfolioController {
         portfolioService.updatePortfolio(portfolio);
     }
 
-    @GetMapping("/holdings")
-    public List<Holding> fetchHoldings() {
-        Portfolio current = portfolioService.getCurrentPortfolio();
-        return current != null ? current.getHoldings() : List.of();
+    @GetMapping
+    public Portfolio getPortfolio() {
+        return portfolioService.getPortfolioByUserId();
     }
 
+    @GetMapping("/exists")
+    public boolean exists() {
+        return portfolioService.existsByUserId();
+    }
+
+    @GetMapping("/holdings")
+    public List<Holding> fetchHoldings() {
+        Portfolio current = portfolioService.getPortfolioByUserId();
+        return current != null ? current.getHoldings() : List.of();
+    }
 
 
 }

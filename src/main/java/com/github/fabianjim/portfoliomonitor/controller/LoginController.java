@@ -2,11 +2,18 @@ package com.github.fabianjim.portfoliomonitor.controller;
 
 import com.github.fabianjim.portfoliomonitor.model.User;
 import com.github.fabianjim.portfoliomonitor.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,39 +29,55 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+        // check user info
         if (userRepository.existsByUsername(request.username)) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Username already exists"));
+                    .body(new RegisterResponse("This user already exists", null));
         }
 
         String hashedPassword = passwordEncoder.encode(request.password);
         User user = new User(request.username, hashedPassword);
         userRepository.save(user);
 
-        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
+        return ResponseEntity.ok(
+                new RegisterResponse("User created successfully", user.getUsername())
+        );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
-        Optional<User> userOpt = userRepository.findByUsername(request.username);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        Optional<User> foundUser = userRepository.findByUsername(request.username);
         
-        if (userOpt.isEmpty()) {
+        if (foundUser.isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid username or password"));
+                    .body(new LoginResponse("Invalid username or password", null, null));
         }
-
-        User user = userOpt.get();
+        User user = foundUser.get();
         if (!passwordEncoder.matches(request.password, user.getPassword())) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid username or password"));
+                    .body(new LoginResponse("Invalid username or password", null, null));
         }
 
-        return ResponseEntity.ok(Map.of(
-                "message", "Login successful",
-                "username", user.getUsername()
-        ));
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, null, List.of()
+        );
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        System.out.println("User " + user.getUsername() + " " + user.getId() + " logged in successfully.");
+        return ResponseEntity.ok(
+                new LoginResponse("Login successful", user.getUsername(), user.getId())
+        );
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<LoginResponse> logout() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok(
+                new LoginResponse("Logout successful", null, null)
+        );
+    }
+
 
     public static class RegisterRequest {
         public String username;
@@ -64,5 +87,9 @@ public class LoginController {
     public static class LoginRequest {
         public String username;
         public String password;
-    }
+    } 
+
+    public record LoginResponse(String message, String username, Integer userId) {}
+
+    public record RegisterResponse(String message, String username) {}
 }
