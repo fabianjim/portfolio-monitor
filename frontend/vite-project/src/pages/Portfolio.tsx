@@ -32,16 +32,10 @@ export default function Portfolio() {
     setHoldings(holdings.map((h, i) => (i === idx ? updated : h)))
 
   const handleLogout = () => {
-    // Clear any stored authentication data (if you're using localStorage/sessionStorage)
-    // localStorage.removeItem('authToken')
-    // sessionStorage.clear()
-    
-    // Reset component state
     setHoldings([{ ticker: '', shares: '' }])
     setResults([])
     setError('')
     
-    // Navigate back to login
     navigate('/login')
   }
 
@@ -62,25 +56,36 @@ export default function Portfolio() {
       setError(validationError)
       return
     }
+    
     setLoading(true)
     try {
+      
       const payload = {
         holdings: holdings.map((h) => ({
           ticker: h.ticker.trim().toUpperCase(),
           shares: Number(h.shares),
         })),
       }
+      
+      //submit portfolio with holdings
       const postRes = await fetch('/api/portfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        credentials: "include",
       })
       if (!postRes.ok) throw new Error('Failed to submit portfolio, backend must be running')
 
-      const getRes = await fetch('/api/portfolio/holdings')
+      //fetch portfolio holding stock information
+      const getRes = await fetch('/api/portfolio/holdings', {
+        method: 'GET',
+        credentials: "include",
+      })
       if (!getRes.ok) throw new Error('Failed to fetch holdings')
+      
       const data = (await getRes.json()) as Holding[]
       setResults(data)
+      
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Unexpected error'
       setError(message)
