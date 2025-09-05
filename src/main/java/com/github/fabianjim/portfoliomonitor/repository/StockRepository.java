@@ -16,9 +16,9 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     
     boolean existsByTicker(String ticker);
     
-    // Find the most recent stock data for a ticker
+    // find most recent stock data for a ticker
     Optional<Stock> findFirstByTickerOrderByTimestampDesc(String ticker);
     
-    // Find all stock data for a ticker
+    // find all stock data for a ticker
     List<Stock> findByTickerOrderByTimestampDesc(String ticker);
 }
