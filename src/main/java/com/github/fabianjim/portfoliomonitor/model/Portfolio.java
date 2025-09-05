@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "portfolios")
 public class Portfolio {
@@ -14,6 +16,7 @@ public class Portfolio {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
+    @JsonIgnore 
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL)
