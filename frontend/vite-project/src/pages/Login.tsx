@@ -35,8 +35,7 @@ export default function Login() {
       if (response.ok) {
         setSuccess(data.message)
         if (isLogin) {
-          const userId = data.userId
-          await checkPortfolio(userId)
+          await checkPortfolio()
         } else {
           setIsLogin(true)
           setUsername('')
@@ -52,7 +51,7 @@ export default function Login() {
     }
   }
 
-  const checkPortfolio = async (userId: number) => {
+  const checkPortfolio = async () => {
     const response = await fetch(`/api/portfolio/exists`, {
       method: 'GET',
       credentials: "include",
@@ -62,9 +61,9 @@ export default function Login() {
     console.log('Has portfolio:', hasPortfolio) // TODO: REMOVE
     
     if(hasPortfolio) {
-      navigate('/dashboard', { state: { userId } })
+      navigate('/dashboard')
     } else {
-      navigate('/portfolio', { state: { userId } })
+      navigate('/portfolio')
     }
   }
 

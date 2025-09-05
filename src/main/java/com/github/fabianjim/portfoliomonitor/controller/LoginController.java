@@ -3,12 +3,10 @@ package com.github.fabianjim.portfoliomonitor.controller;
 import com.github.fabianjim.portfoliomonitor.model.User;
 import com.github.fabianjim.portfoliomonitor.repository.UserRepository;
 
-import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +28,6 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
-        // check user info
         if (userRepository.existsByUsername(request.username)) {
             return ResponseEntity.badRequest()
                     .body(new RegisterResponse("This user already exists", null));

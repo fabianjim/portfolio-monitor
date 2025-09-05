@@ -5,6 +5,7 @@ import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
 import com.github.fabianjim.portfoliomonitor.model.User;
 import com.github.fabianjim.portfoliomonitor.repository.PortfolioRepository;
+import com.github.fabianjim.portfoliomonitor.repository.UserRepository;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,11 +20,14 @@ public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final StockService stockService;
+    private final UserRepository userRepository;
 
     public PortfolioService(PortfolioRepository portfolioRepository,
-                          StockService stockService) {
+                          StockService stockService,
+                          UserRepository userRepository) {
         this.portfolioRepository = portfolioRepository;
         this.stockService = stockService;
+        this.userRepository = userRepository;
     }
 
     private Integer getCurrentUserId() {
@@ -35,11 +39,32 @@ public class PortfolioService {
         return user.getId();
     }
 
+    public void createPortfolio(Portfolio portfolio) {
+        Integer userId = getCurrentUserId();
+        
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        portfolio.setUser(user);
+        
+        if (portfolio != null && portfolio.getHoldings() != null) {
+            portfolioRepository.save(portfolio);
+        }
+    }
+
+    public List<String> getTickersfromPortfolio(Portfolio portfolio) {
+        List<String> tickers = portfolio.getHoldings().stream()
+                .map(Holding::getTicker)
+                .distinct()
+                .toList();
+        return tickers;
+    }
+
+
+
     public boolean existsByUserId() {
         Integer userId = getCurrentUserId();
         return portfolioRepository.existsByUserId(userId);
     }
-
 
 
     public void updatePortfolio(Portfolio portfolio) {
@@ -64,7 +89,7 @@ public class PortfolioService {
         */
     } 
 
-    public Portfolio getPortfolioByUserId() {
+    public Portfolio getPortfolio() {
         Integer userId = getCurrentUserId();
         return portfolioRepository.findByUserId(userId).orElse(null);
     }

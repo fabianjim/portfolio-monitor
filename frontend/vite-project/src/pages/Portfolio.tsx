@@ -1,22 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-type Stock = {
-  ticker: string
-  timestamp: string
-  currentPrice: number
-  open: number
-  prevClose: number
-  high: number
-  low: number
-}
-
-type Holding = {
-  ticker: string
-  shares: number
-  stock?: Stock | null
-}
-
 export default function Portfolio() {
   const navigate = useNavigate()
   const [holdings, setHoldings] = useState<Array<{ ticker: string; shares: string }>>([
@@ -24,16 +8,15 @@ export default function Portfolio() {
   ])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
-  const [results, setResults] = useState<Holding[]>([])
 
   const addHolding = () => setHoldings([...holdings, { ticker: '', shares: '' }])
   const removeHolding = (idx: number) => setHoldings(holdings.filter((_, i) => i !== idx))
   const updateHolding = (idx: number, updated: { ticker: string; shares: string }) =>
     setHoldings(holdings.map((h, i) => (i === idx ? updated : h)))
 
+  // TODO: needs to fetch '/logout' to clear session cookie
   const handleLogout = () => {
     setHoldings([{ ticker: '', shares: '' }])
-    setResults([])
     setError('')
     
     navigate('/login')
@@ -49,7 +32,7 @@ export default function Portfolio() {
     return ''
   }
 
-  const fetchPortfolioInfo = async () => {
+  const createPortfolio = async () => {
     setError('')
     const validationError = validate()
     if (validationError) {
@@ -59,7 +42,6 @@ export default function Portfolio() {
     
     setLoading(true)
     try {
-      
       const payload = {
         holdings: holdings.map((h) => ({
           ticker: h.ticker.trim().toUpperCase(),
@@ -67,24 +49,17 @@ export default function Portfolio() {
         })),
       }
       
-      //submit portfolio with holdings
-      const postRes = await fetch('/api/portfolio', {
+      // create portfolio with holdings
+      const response = await fetch('/api/portfolio/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
         credentials: "include",
       })
-      if (!postRes.ok) throw new Error('Failed to submit portfolio, backend must be running')
-
-      //fetch portfolio holding stock information
-      const getRes = await fetch('/api/portfolio/holdings', {
-        method: 'GET',
-        credentials: "include",
-      })
-      if (!getRes.ok) throw new Error('Failed to fetch holdings')
       
-      const data = (await getRes.json()) as Holding[]
-      setResults(data)
+      if (!response.ok) throw new Error('Failed to create portfolio, backend must be running')
+
+      navigate('/dashboard')
       
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Unexpected error'
@@ -137,47 +112,12 @@ export default function Portfolio() {
 
       <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
         <button type="button" onClick={addHolding}>Add Holding</button>
-        <button type="button" onClick={fetchPortfolioInfo} disabled={loading}>
-          {loading ? 'Loading…' : 'Fetch Portfolio Info'}
+        <button type="button" onClick={createPortfolio} disabled={loading}>
+          {loading ? 'Creating…' : 'Create Portfolio'}
         </button>
       </div>
 
       {error && <div style={{ color: '#b00020', marginTop: 8 }}>{error}</div>}
-
-      {results.length > 0 && (
-        <div style={{ marginTop: 16 }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                {['Ticker', 'Shares', 'Timestamp', 'Current Price', 'Open', 'Prev Close', 'High', 'Low', 'Market Value'].map(
-                  (h) => (
-                    <th key={h} style={{ border: '1px solid #ddd', padding: 8, textAlign: 'left', background: '#808080' }}>
-                      {h}
-                    </th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((r, i) => (
-                <tr key={i}>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.ticker}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.shares}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.timestamp ?? '-'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.currentPrice ?? '-'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.open ?? '-'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.prevClose ?? '-'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.high ?? '-'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.low ?? '-'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>
-                    {r.stock ? (Number(r.shares) * Number(r.stock.currentPrice)).toFixed(2) : '-'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
     </div>
   )
 }
