@@ -14,11 +14,17 @@ export default function Portfolio() {
   const updateHolding = (idx: number, updated: { ticker: string; shares: string }) =>
     setHoldings(holdings.map((h, i) => (i === idx ? updated : h)))
 
-  // TODO: needs to fetch '/logout' to clear session cookie
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setHoldings([{ ticker: '', shares: '' }])
     setError('')
-    
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })      
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
     navigate('/login')
   }
 

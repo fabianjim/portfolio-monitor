@@ -24,10 +24,18 @@ export default function Dashboard() {
   const [results, setResults] = useState<Holding[]>([])
   const hasFetched = useRef(false)
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setResults([])
     setError('')
-    
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+      
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
     navigate('/login')
   }
 
