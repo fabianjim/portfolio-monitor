@@ -35,21 +35,35 @@ export default function Login() {
       if (response.ok) {
         setSuccess(data.message)
         if (isLogin) {
-          // Navigate to portfolio page
-          navigate('/portfolio')
+          await checkPortfolio()
         } else {
-          // Switch to login after successful registration
           setIsLogin(true)
           setUsername('')
           setPassword('')
         }
       } else {
-        setError(data.error || 'Something went wrong')
+        setError(data.message || 'Something went wrong')
       }
     } catch (e) {
       setError('Network error. Make sure the backend is running.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const checkPortfolio = async () => {
+    const response = await fetch(`/api/portfolio/exists`, {
+      method: 'GET',
+      credentials: "include",
+    })
+    const hasPortfolio = await response.json()
+
+    console.log('Has portfolio:', hasPortfolio) // TODO: REMOVE
+    
+    if(hasPortfolio) {
+      navigate('/dashboard')
+    } else {
+      navigate('/portfolio')
     }
   }
 
@@ -76,6 +90,7 @@ export default function Login() {
 
       </div>
 
+       {/* User is logging in */}
       <button
         onClick={handleSubmit}
         disabled={loading}
@@ -93,9 +108,10 @@ export default function Login() {
         {loading ? 'Loading...' : (isLogin ? 'Login' : 'Register')}
       </button>
 
+      {/* User is registering */}
       <button
         onClick={() => {
-          setIsLogin(!isLogin)
+          setIsLogin(!isLogin) 
           setError('')
           setSuccess('')
         }}

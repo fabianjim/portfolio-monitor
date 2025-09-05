@@ -20,13 +20,32 @@ public class PortfolioController {
     public void submitPortfolio(@RequestBody Portfolio portfolio) {
         portfolioService.updatePortfolio(portfolio);
     }
+    @PostMapping("/create")
+    public void createPortfolio(@RequestBody Portfolio portfolio) {
+        portfolioService.createPortfolio(portfolio);
+    }
+
+    // TODO
+    @PostMapping("/update")
+    public void updatePortfolio(@RequestBody Portfolio portfolio) {
+        portfolioService.updatePortfolio(portfolio);
+    }
+
+    @GetMapping
+    public Portfolio getPortfolio() {
+        return portfolioService.getPortfolio();
+    }
+
+    @GetMapping("/exists")
+    public boolean exists() {
+        return portfolioService.existsByUserId();
+    }
 
     @GetMapping("/holdings")
     public List<Holding> fetchHoldings() {
-        Portfolio current = portfolioService.getCurrentPortfolio();
+        Portfolio current = portfolioService.getPortfolio();
         return current != null ? current.getHoldings() : List.of();
     }
-
 
 
 }

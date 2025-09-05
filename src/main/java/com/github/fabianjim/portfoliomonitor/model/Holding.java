@@ -15,16 +15,12 @@ public class Holding {
     
     @Column(nullable = false)
     private double shares;
-    
-    @Column(name = "average_cost", nullable = false)
-    private double averageCost;
 
     public Holding() {}
 
-    public Holding(String ticker, double shares, double averageCost) {
+    public Holding(String ticker, double shares) {
         this.ticker = ticker;
         this.shares = shares;
-        this.averageCost = averageCost;
     }
 
     public int getId() {
@@ -51,11 +47,4 @@ public class Holding {
         this.shares = shares;
     }
 
-    public double getAverageCost() {
-        return averageCost;
-    }
-
-    public void setAverageCost(double averageCost) {
-        this.averageCost = averageCost;
-    }
 }
