@@ -6,6 +6,7 @@ import com.github.fabianjim.portfoliomonitor.repository.StockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +36,12 @@ public class StockService {
 
     public Stock updateStockData(String ticker) {
         Stock freshData = marketDataClient.getStockData(ticker);
-        
+        System.out.println("Fresh data: " + freshData.getTimestamp());
         Optional<Stock> existing = stockRepository.findByTickerAndTimestamp(
             ticker, freshData.getTimestamp());
         
         if (existing.isPresent()) {
+            System.out.println(("Existing" + existing.get().getTimestamp()));
             Stock existingStock = existing.get();
             existingStock.setCurrentPrice(freshData.getCurrentPrice());
             existingStock.setOpen(freshData.getOpen());
@@ -52,15 +54,18 @@ public class StockService {
         }
     }
 
-    public void updateMultipleStocks(List<String> tickers) {
+    public List<Stock> updateMultipleStocks(List<String> tickers) {
+        List<Stock> updatedStocks = new ArrayList<>();
         for (String ticker : tickers) {
             try {
-                updateStockData(ticker);
+                System.out.println("Updating for ticker: " + ticker);
+                Stock updatedStock = updateStockData(ticker);
+                updatedStocks.add(updatedStock);
             } catch (Exception e) {
-                // Log error but continue with other tickers
                 System.err.println("Failed to update stock data for " + ticker + ": " + e.getMessage());
             }
         }
+        return updatedStocks;
     }
 
     public boolean hasStockData(String ticker) {
