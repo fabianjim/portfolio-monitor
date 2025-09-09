@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
+
 
 @SpringBootTest
 public class TiingoAPIIntegrationTest {
@@ -35,7 +37,7 @@ public class TiingoAPIIntegrationTest {
 
         Stock mockStock = new Stock();
         mockStock.setCurrentPrice(200);
-        mockStock.setTimestamp("2025-08-01T14:30:00Z");
+        mockStock.setTimestamp(Instant.parse("2025-08-01T14:30:00Z"));
         mockStock.setOpen(195);
         mockStock.setHigh(201);
         mockStock.setLow(199);

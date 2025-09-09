@@ -1,6 +1,7 @@
 package com.github.fabianjim.portfoliomonitor.model;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "stocks", 
@@ -15,7 +16,7 @@ public class Stock {
     private String ticker;
     
     @Column(nullable = false)
-    private String timestamp;
+    private Instant timestamp;
     
     @Column(name = "current_price", nullable = false)
     private double currentPrice;
@@ -33,7 +34,7 @@ public class Stock {
     private double low;
 
     public Stock() {};
-    public Stock(String ticker, String timestamp, double currentPrice, double open, double prevClose, double high, double low) {
+    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low) {
         this.ticker = ticker;
         this.timestamp = timestamp;
         this.currentPrice = currentPrice;
@@ -98,11 +99,11 @@ public class Stock {
         return prevClose;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 
-    public String getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 }

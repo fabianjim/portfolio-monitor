@@ -3,6 +3,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -44,7 +48,8 @@ public class TiingoClient implements MarketDataClient {
             if (root.isArray() && !root.isEmpty()) {
                 JsonNode stockNode = root.get(0);
 
-                String timestamp = stockNode.get("timestamp").asText();
+                String apiTimestamp = stockNode.get("timestamp").asText();
+                Instant timestamp = OffsetDateTime.parse(apiTimestamp).toInstant();
                 double currentPrice = stockNode.get("tngoLast").asDouble();
                 double open = stockNode.get("open").asDouble();
                 double prevClose = stockNode.get("prevClose").asDouble();
