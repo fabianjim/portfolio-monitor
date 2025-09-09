@@ -6,13 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Integer> {
     
     Optional<Stock> findByTicker(String ticker);
     
-    Optional<Stock> findByTickerAndTimestamp(String ticker, String timestamp);
+    Optional<Stock> findByTickerAndTimestamp(String ticker, Instant timestamp);
     
     boolean existsByTicker(String ticker);
     

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { roundToMinute } from '../utils/dateUtils'
 
 type Stock = {
   ticker: string
@@ -132,7 +133,7 @@ export default function Dashboard() {
                 <tr key={i}>
                   <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.ticker}</td>
                   <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.shares}</td>
-                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.timestamp ?? '-'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.timestamp ? roundToMinute(r.stock.timestamp) : '-'}</td>
                   <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.currentPrice ?? '-'}</td>
                   <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.open ?? '-'}</td>
                   <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.stock?.prevClose ?? '-'}</td>

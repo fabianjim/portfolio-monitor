@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.time.Instant;
 
 @Service
 @Transactional
@@ -98,7 +99,7 @@ public class PortfolioService {
         return stockService.getLatestStockData(ticker).orElse(null);
     }
 
-    public Stock getStockData(String ticker, String timestamp) {
+    public Stock getStockData(String ticker, Instant timestamp) {
         return stockService.getStockData(ticker, timestamp).orElse(null);
     }
 

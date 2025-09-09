@@ -6,6 +6,7 @@ import com.github.fabianjim.portfoliomonitor.repository.StockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class StockService {
         return stockRepository.findFirstByTickerOrderByTimestampDesc(ticker);
     }
 
-    public Optional<Stock> getStockData(String ticker, String timestamp) {
+    public Optional<Stock> getStockData(String ticker, Instant timestamp) {
         return stockRepository.findByTickerAndTimestamp(ticker, timestamp);
     }
 

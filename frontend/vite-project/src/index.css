@@ -1,5 +1,69 @@
+@font-face {
+  font-family: 'authentic-sans';
+  src: url('/fonts/authentic-sans-60.woff') format('woff');
+  font-weight: 60;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans';
+  src: url('/fonts/authentic-sans-90.woff') format('woff');
+  font-weight: 90;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans';
+  src: url('/fonts/authentic-sans-130.woff') format('woff');
+  font-weight: 130;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans';
+  src: url('/fonts/authentic-sans-150.woff') format('woff');
+  font-weight: 150;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans-condensed';
+  src: url('/fonts/authentic-sans-condensed-60.woff') format('woff');
+  font-weight: 60;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans-condensed';
+  src: url('/fonts/authentic-sans-condensed-90.woff') format('woff');
+  font-weight: 90;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans-condensed';
+  src: url('/fonts/authentic-sans-condensed-130.woff') format('woff');
+  font-weight: 130;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'authentic-sans-condensed';
+  src: url('/fonts/authentic-sans-condensed-150.woff') format('woff');
+  font-weight: 150;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'authentic-sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.time.Instant;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -18,7 +19,7 @@ class StockRepositoryTest {
     @Test
     void testSaveAndFindStock() {
         // Create a test stock
-        Stock stock = new Stock("TEST", "2024-01-01T00:00:00Z", 100.0, 99.0, 98.0, 101.0, 97.0);
+        Stock stock = new Stock("TEST", Instant.parse("2024-01-01T00:00:00Z"), 100.0, 99.0, 98.0, 101.0, 97.0);
         
         // Save the stock
         Stock savedStock = stockRepository.save(stock);
