@@ -95,6 +95,7 @@ public class PortfolioService {
         return portfolioRepository.findByUserId(userId).orElse(null);
     }
     
+    
     public Stock getStockData(String ticker) {
         return stockService.getLatestStockData(ticker).orElse(null);
     }

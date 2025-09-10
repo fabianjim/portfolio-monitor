@@ -23,6 +23,9 @@ public class Portfolio {
     @JoinColumn(name = "portfolio_id")
     private List<Holding> holdings;
 
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL)
+    private List<Stock> stocks;
+
     public Portfolio() {};
 
     public Portfolio(User user, List<Holding> holdings) {

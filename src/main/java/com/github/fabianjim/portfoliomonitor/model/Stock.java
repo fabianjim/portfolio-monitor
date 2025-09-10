@@ -5,12 +5,16 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "stocks", 
-       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp"})})
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp", "portfolio_id"})})
 public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "portfolio_id", nullable = true)
+    private Portfolio portfolio;
 
     @Column(nullable = false)
     private String ticker;
@@ -38,6 +42,7 @@ public class Stock {
     private StockType type;
 
     public Stock() {};
+
     public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type) {
         this.ticker = ticker;
         this.timestamp = timestamp;
@@ -49,9 +54,24 @@ public class Stock {
         this.type = type;
     };
 
-    enum StockType {
+    // constructor with portfolio is only used for initial stock fetches
+    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type, Portfolio portfolio) {
+        this.ticker = ticker;
+        this.timestamp = timestamp;
+        this.currentPrice = currentPrice;
+        this.open = open;
+        this.prevClose = prevClose;
+        this.high = high;
+        this.low = low;
+        this.type = type;
+        this.portfolio = portfolio;
+    };
+    
+
+    public enum StockType {
         EOD,
-        INTRADAY
+        INTRADAY,
+        INITIAL
     }
 
     public int getId() {
@@ -123,5 +143,13 @@ public class Stock {
 
     public StockType getType() {
         return type;
+    }
+
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
 }

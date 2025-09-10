@@ -1,6 +1,7 @@
 package com.github.fabianjim.portfoliomonitor.api;
 
 import com.github.fabianjim.portfoliomonitor.model.Stock;
+import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
 
 public interface MarketDataClient {
     /**
@@ -19,8 +20,9 @@ public interface MarketDataClient {
     /**
      * Fetch detailed stock data for the ticker passed from the market API
      * @param ticker listed for the stock
+     * @param type the type of stock data (INITIAL, EOD, INTRADAY)
      * @return Stock object with data retrieval timestamp, current price, day opening price, previous day's closing price,
      * highest price today, and lowest price today of the stock
      */
-    Stock getStockData(String ticker);
+    Stock getStockData(String ticker, StockType type);
 }
