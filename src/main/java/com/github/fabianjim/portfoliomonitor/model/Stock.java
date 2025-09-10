@@ -33,8 +33,12 @@ public class Stock {
     @Column(nullable = false)
     private double low;
 
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private StockType type;
+
     public Stock() {};
-    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low) {
+    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type) {
         this.ticker = ticker;
         this.timestamp = timestamp;
         this.currentPrice = currentPrice;
@@ -42,7 +46,13 @@ public class Stock {
         this.prevClose = prevClose;
         this.high = high;
         this.low = low;
+        this.type = type;
     };
+
+    enum StockType {
+        EOD,
+        INTRADAY
+    }
 
     public int getId() {
         return id;
@@ -105,5 +115,13 @@ public class Stock {
 
     public Instant getTimestamp() {
         return timestamp;
+    }
+
+    public void setType(StockType type) {
+        this.type = type;
+    }
+
+    public StockType getType() {
+        return type;
     }
 }

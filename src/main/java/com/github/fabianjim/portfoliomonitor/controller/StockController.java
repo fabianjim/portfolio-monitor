@@ -27,9 +27,7 @@ public class StockController {
     @GetMapping("/fetch")
     public List<Stock> fectchStocksForPortfolio() {
         Portfolio portfolio = portfolioService.getPortfolio();
-        System.out.println("Portfolio from fetching before getTickers(): " + portfolio.getHoldings());
         List<String> tickers = portfolioService.getTickersfromPortfolio(portfolio);
-        System.out.println("Tickers from fetching: " + tickers);
         return stockService.updateMultipleStocks(tickers);
     }
 }
