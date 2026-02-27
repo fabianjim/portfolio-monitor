@@ -1,7 +1,9 @@
 package com.github.fabianjim.portfoliomonitor.service;
 
 import com.github.fabianjim.portfoliomonitor.api.MarketDataClient;
+import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
+import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
 import com.github.fabianjim.portfoliomonitor.repository.StockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,32 +37,27 @@ public class StockService {
         return stockRepository.findByTickerOrderByTimestampDesc(ticker);
     }
 
-    public Stock updateStockData(String ticker) {
-        Stock freshData = marketDataClient.getStockData(ticker);
-        System.out.println("Fresh data: " + freshData.getTimestamp());
-        Optional<Stock> existing = stockRepository.findByTickerAndTimestamp(
-            ticker, freshData.getTimestamp());
-        
-        if (existing.isPresent()) {
-            System.out.println(("Existing" + existing.get().getTimestamp()));
-            Stock existingStock = existing.get();
-            existingStock.setCurrentPrice(freshData.getCurrentPrice());
-            existingStock.setOpen(freshData.getOpen());
-            existingStock.setPrevClose(freshData.getPrevClose());
-            existingStock.setHigh(freshData.getHigh());
-            existingStock.setLow(freshData.getLow());
-            return stockRepository.save(existingStock);
-        } else {
-            return stockRepository.save(freshData);
-        }
+    public Stock updateStockData(String ticker, StockType type) {
+        return updateStockData(ticker, type, null);
     }
 
-    public List<Stock> updateMultipleStocks(List<String> tickers) {
+    public Stock updateStockData(String ticker, StockType type, Portfolio portfolio) {
+        Stock freshData = marketDataClient.getStockData(ticker, type);
+        if(type == StockType.INITIAL) {
+            freshData.setPortfolio(portfolio);
+        }
+        return stockRepository.save(freshData);
+    }
+
+    public List<Stock> updateMultipleStocks(List<String> tickers, StockType type) {
+        return updateMultipleStocks(tickers, type, null);
+    }
+
+    public List<Stock> updateMultipleStocks(List<String> tickers, StockType type, Portfolio portfolio) {
         List<Stock> updatedStocks = new ArrayList<>();
         for (String ticker : tickers) {
             try {
-                System.out.println("Updating for ticker: " + ticker);
-                Stock updatedStock = updateStockData(ticker);
+                Stock updatedStock = updateStockData(ticker, type, portfolio);
                 updatedStocks.add(updatedStock);
             } catch (Exception e) {
                 System.err.println("Failed to update stock data for " + ticker + ": " + e.getMessage());

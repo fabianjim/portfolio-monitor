@@ -2,6 +2,8 @@ package com.github.fabianjim.portfoliomonitor.service;
 
 import com.github.fabianjim.portfoliomonitor.api.TiingoClient;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
+import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +46,9 @@ public class TiingoAPIIntegrationTest {
         mockStock.setPrevClose(190);
 
         TiingoClient tiingoClient = Mockito.mock(TiingoClient.class);
-        when(tiingoClient.getStockData("AAPL")).thenReturn(mockStock);
+        when(tiingoClient.getStockData("AAPL", StockType.INITIAL)).thenReturn(mockStock);
 
-        Stock apple = tiingoClient.getStockData("AAPL");
+        Stock apple = tiingoClient.getStockData("AAPL", StockType.INITIAL);
 
         assertEquals(200, apple.getCurrentPrice());
         assertEquals("2025-08-01T14:30:00Z", apple.getTimestamp());

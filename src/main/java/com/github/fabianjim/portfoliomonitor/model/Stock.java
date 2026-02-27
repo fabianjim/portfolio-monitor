@@ -5,12 +5,16 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "stocks", 
-       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp"})})
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp", "portfolio_id"})})
 public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "portfolio_id", nullable = true)
+    private Portfolio portfolio;
 
     @Column(nullable = false)
     private String ticker;
@@ -33,8 +37,13 @@ public class Stock {
     @Column(nullable = false)
     private double low;
 
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private StockType type;
+
     public Stock() {};
-    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low) {
+
+    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type) {
         this.ticker = ticker;
         this.timestamp = timestamp;
         this.currentPrice = currentPrice;
@@ -42,7 +51,28 @@ public class Stock {
         this.prevClose = prevClose;
         this.high = high;
         this.low = low;
+        this.type = type;
     };
+
+    // constructor with portfolio is only used for initial stock fetches
+    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type, Portfolio portfolio) {
+        this.ticker = ticker;
+        this.timestamp = timestamp;
+        this.currentPrice = currentPrice;
+        this.open = open;
+        this.prevClose = prevClose;
+        this.high = high;
+        this.low = low;
+        this.type = type;
+        this.portfolio = portfolio;
+    };
+    
+
+    public enum StockType {
+        EOD,
+        INTRADAY,
+        INITIAL
+    }
 
     public int getId() {
         return id;
@@ -105,5 +135,21 @@ public class Stock {
 
     public Instant getTimestamp() {
         return timestamp;
+    }
+
+    public void setType(StockType type) {
+        this.type = type;
+    }
+
+    public StockType getType() {
+        return type;
+    }
+
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
 }

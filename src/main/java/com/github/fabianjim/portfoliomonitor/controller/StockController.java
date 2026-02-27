@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
+import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
 import com.github.fabianjim.portfoliomonitor.service.PortfolioService;
 import com.github.fabianjim.portfoliomonitor.service.StockService;
 
@@ -24,12 +25,21 @@ public class StockController {
         this.portfolioService = portfolioService;
     }
 
-    @GetMapping("/fetch")
-    public List<Stock> fectchStocksForPortfolio() {
+    // initial manual fetch from the frontend before routine fetches
+    @GetMapping("/fetch/initial")
+    public List<Stock> fectchInitialStocks() {
         Portfolio portfolio = portfolioService.getPortfolio();
-        System.out.println("Portfolio from fetching before getTickers(): " + portfolio.getHoldings());
         List<String> tickers = portfolioService.getTickersfromPortfolio(portfolio);
-        System.out.println("Tickers from fetching: " + tickers);
-        return stockService.updateMultipleStocks(tickers);
+        return stockService.updateMultipleStocks(tickers, StockType.INITIAL, portfolio);
+    }
+
+    @GetMapping("/fetch/intraday")
+    public List<Stock> fetchIntradayStocks() {
+        return null;
+    }
+
+    @GetMapping("/fetch/eod")
+    public List<Stock> fetchEODStocks() {
+        return null;
     }
 }

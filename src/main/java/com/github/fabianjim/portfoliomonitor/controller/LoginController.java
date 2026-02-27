@@ -67,13 +67,13 @@ public class LoginController {
         );
     }
 
-    @PostMapping("/logout")
+    /*@PostMapping("/logout")
     public ResponseEntity<LoginResponse> logout() {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok(
                 new LoginResponse("Logout successful", null, null)
         );
-    }
+    }*/
 
 
     public static class RegisterRequest {

@@ -45,7 +45,7 @@ export default function Dashboard() {
     setLoading(true)
     try {
       // fetch stock data
-      const fetchRes = await fetch('/api/stock/fetch', {
+      const fetchRes = await fetch('/api/stock/fetch/initial', {
         method: 'GET',
         credentials: "include",
       })

@@ -47,5 +47,4 @@ public class PortfolioController {
         return current != null ? current.getHoldings() : List.of();
     }
 
-
 }
