@@ -2,19 +2,17 @@ package com.github.fabianjim.portfoliomonitor.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "stocks", 
-       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp", "portfolio_id"})})
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"ticker", "timestamp"})})
 public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "portfolio_id", nullable = true)
-    private Portfolio portfolio;
 
     @Column(nullable = false)
     private String ticker;
@@ -52,19 +50,6 @@ public class Stock {
         this.high = high;
         this.low = low;
         this.type = type;
-    };
-
-    // constructor with portfolio is only used for initial stock fetches
-    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type, Portfolio portfolio) {
-        this.ticker = ticker;
-        this.timestamp = timestamp;
-        this.currentPrice = currentPrice;
-        this.open = open;
-        this.prevClose = prevClose;
-        this.high = high;
-        this.low = low;
-        this.type = type;
-        this.portfolio = portfolio;
     };
     
 
@@ -143,13 +128,5 @@ public class Stock {
 
     public StockType getType() {
         return type;
-    }
-
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
-
-    public Portfolio getPortfolio() {
-        return portfolio;
     }
 }

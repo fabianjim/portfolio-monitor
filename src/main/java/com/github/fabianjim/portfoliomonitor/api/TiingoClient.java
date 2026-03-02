@@ -2,7 +2,6 @@ package com.github.fabianjim.portfoliomonitor.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
 import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
 
@@ -59,32 +58,6 @@ public class TiingoClient implements MarketDataClient {
                 double low = stockNode.get("low").asDouble();
 
                 return new Stock(ticker, timestamp, currentPrice, open, prevClose, high, low, type);
-            }
-            else {
-                throw new RuntimeException("Invalid JSON data format for: " + ticker);
-            }
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error parsing JSON for ticker: " + ticker, e);
-        }
-    }
-
-    public Stock parseStockData(String json, String ticker, StockType type, Portfolio portfolio) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode root = objectMapper.readTree(json);
-            if (root.isArray() && !root.isEmpty()) {
-                JsonNode stockNode = root.get(0);
-
-                String apiTimestamp = stockNode.get("timestamp").asText();
-                Instant timestamp = OffsetDateTime.parse(apiTimestamp).toInstant();
-                double currentPrice = stockNode.get("tngoLast").asDouble();
-                double open = stockNode.get("open").asDouble();
-                double prevClose = stockNode.get("prevClose").asDouble();
-                double high = stockNode.get("high").asDouble();
-                double low = stockNode.get("low").asDouble();
-
-                return new Stock(ticker, timestamp, currentPrice, open, prevClose, high, low, type, portfolio);
             }
             else {
                 throw new RuntimeException("Invalid JSON data format for: " + ticker);
