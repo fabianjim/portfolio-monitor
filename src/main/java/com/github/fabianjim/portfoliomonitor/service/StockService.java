@@ -1,7 +1,6 @@
 package com.github.fabianjim.portfoliomonitor.service;
 
 import com.github.fabianjim.portfoliomonitor.api.MarketDataClient;
-import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.Stock;
 import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
 import com.github.fabianjim.portfoliomonitor.repository.StockRepository;
@@ -38,26 +37,27 @@ public class StockService {
     }
 
     public Stock updateStockData(String ticker, StockType type) {
-        return updateStockData(ticker, type, null);
-    }
-
-    public Stock updateStockData(String ticker, StockType type, Portfolio portfolio) {
         Stock freshData = marketDataClient.getStockData(ticker, type);
-        if(type == StockType.INITIAL) {
-            freshData.setPortfolio(portfolio);
+
+        // Check if data already exists for this ticker/timestamp combination
+        Optional<Stock> existingData = stockRepository.findByTickerAndTimestamp(
+            ticker, freshData.getTimestamp()
+        );
+
+        if (existingData.isPresent()) {
+            // Data already exists, return existing data
+            System.out.println("Stock data already exists for " + ticker + " at " + freshData.getTimestamp() + ", skipping duplicate insert");
+            return existingData.get();
         }
+
         return stockRepository.save(freshData);
     }
 
     public List<Stock> updateMultipleStocks(List<String> tickers, StockType type) {
-        return updateMultipleStocks(tickers, type, null);
-    }
-
-    public List<Stock> updateMultipleStocks(List<String> tickers, StockType type, Portfolio portfolio) {
         List<Stock> updatedStocks = new ArrayList<>();
         for (String ticker : tickers) {
             try {
-                Stock updatedStock = updateStockData(ticker, type, portfolio);
+                Stock updatedStock = updateStockData(ticker, type);
                 updatedStocks.add(updatedStock);
             } catch (Exception e) {
                 System.err.println("Failed to update stock data for " + ticker + ": " + e.getMessage());
