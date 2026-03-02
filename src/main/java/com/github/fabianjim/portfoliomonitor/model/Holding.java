@@ -1,26 +1,38 @@
 package com.github.fabianjim.portfoliomonitor.model;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "holdings")
 public class Holding {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+
     @Column(nullable = false)
     private String ticker;
-    
+
     @Column(nullable = false)
     private double shares;
+
+    @Column(nullable = false)
+    private Instant buyTimestamp;
 
     public Holding() {}
 
     public Holding(String ticker, double shares) {
         this.ticker = ticker;
         this.shares = shares;
+        this.buyTimestamp = Instant.now();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.buyTimestamp == null) {
+            this.buyTimestamp = Instant.now();
+        }
     }
 
     public int getId() {
@@ -47,4 +59,11 @@ public class Holding {
         this.shares = shares;
     }
 
+    public Instant getBuyTimestamp() {
+        return buyTimestamp;
+    }
+
+    public void setBuyTimestamp(Instant buyTimestamp) {
+        this.buyTimestamp = buyTimestamp;
+    }
 }
