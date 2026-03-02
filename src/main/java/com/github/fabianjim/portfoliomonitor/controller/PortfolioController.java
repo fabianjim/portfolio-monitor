@@ -2,10 +2,12 @@ package com.github.fabianjim.portfoliomonitor.controller;
 
 import com.github.fabianjim.portfoliomonitor.model.Holding;
 import com.github.fabianjim.portfoliomonitor.model.Portfolio;
+import com.github.fabianjim.portfoliomonitor.model.TrackedStock;
 import com.github.fabianjim.portfoliomonitor.service.PortfolioService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/portfolio")
@@ -45,6 +47,24 @@ public class PortfolioController {
     public List<Holding> fetchHoldings() {
         Portfolio current = portfolioService.getPortfolio();
         return current != null ? current.getHoldings() : List.of();
+    }
+
+    @PostMapping("/holdings/add")
+    public void addHolding(@RequestBody Map<String, Object> request) {
+        String ticker = (String) request.get("ticker");
+        double shares = ((Number) request.get("shares")).doubleValue();
+        portfolioService.addHolding(ticker, shares);
+    }
+
+    @PostMapping("/holdings/remove")
+    public void removeHolding(@RequestBody Map<String, String> request) {
+        String ticker = request.get("ticker");
+        portfolioService.removeHolding(ticker);
+    }
+
+    @GetMapping("/trending")
+    public List<TrackedStock> getTrendingStocks() {
+        return portfolioService.getTopTrendingStocks(3);
     }
 
 }
