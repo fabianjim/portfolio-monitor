@@ -1,8 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
   const navigate = useNavigate()
+  
+  useEffect(() => {
+    document.title = 'Login - Portfolio Monitor'
+  }, [])
+  
   const [isLogin, setIsLogin] = useState(true)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

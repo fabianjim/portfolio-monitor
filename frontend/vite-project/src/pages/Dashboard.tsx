@@ -42,6 +42,10 @@ export default function Dashboard() {
   const [newTicker, setNewTicker] = useState('')
   const [newShares, setNewShares] = useState('')
   const hasFetched = useRef(false)
+  
+  useEffect(() => {
+    document.title = 'Dashboard - Portfolio Monitor'
+  }, [])
 
   const handleLogout = async () => {
     setResults([])
