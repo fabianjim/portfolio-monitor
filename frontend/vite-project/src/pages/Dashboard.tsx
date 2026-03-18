@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { roundToMinute } from '../utils/dateUtils'
+import PortfolioChart from '../components/PortfolioChart'
 
 type StockData = {
   stock: Stock | null
@@ -282,6 +283,12 @@ export default function Dashboard() {
 
       {error && <div style={{ color: '#b00020', marginTop: 8, marginBottom: 16 }}>{error}</div>}
 
+      {/* Portfolio History Chart */}
+      <div style={{ marginBottom: 32 }}>
+        <h3 style={{ marginBottom: 16 }}>Portfolio Performance</h3>
+        <PortfolioChart />
+      </div>
+
       {/* Holdings Table */}
       {results.length > 0 && (
         <div style={{ marginTop: 16, marginBottom: 32 }}>
@@ -309,8 +316,9 @@ export default function Dashboard() {
                   const isStale = r.stockData?.stale ?? false
                   
                   return (
-                    <tr key={i} style={{ backgroundColor: isStale ? '#fff3cd' : 'white' }}>
-                      <td style={{ border: '1px solid #ddd', padding: 8 }}>
+                    <tr key={i} style={{ backgroundColor: isStale ? '#fff3cd' : 'white', color: '#6c757d' }}>
+                      {/* ticker*/}
+                      <td style={{ border: '1px solid #ddd', padding: 8, color: '#6c757d' }}>
                         {r.ticker}
                         {isStale && (
                           <span style={{ 
@@ -323,10 +331,16 @@ export default function Dashboard() {
                           </span>
                         )}
                       </td>
-                      <td style={{ border: '1px solid #ddd', padding: 8 }}>{r.shares}</td>
-                      <td style={{ border: '1px solid #ddd', padding: 8 }}>
+                      {/* shares */}
+
+                      <td style={{ border: '1px solid #ddd', padding: 8, color: '#6c757d' }}>{r.shares}</td>
+                      
+                      {/* current price */}
+                      <td style={{ border: '1px solid #ddd', padding: 8, color: '#6c757d' }}>
                         ${currentPrice.toFixed(2)}
                       </td>
+                      
+                      {/* day change */}
                       <td style={{ 
                         border: '1px solid #ddd', 
                         padding: 8,
@@ -334,10 +348,14 @@ export default function Dashboard() {
                       }}>
                         {dayChange >= 0 ? '+' : ''}{dayChange.toFixed(2)} ({dayChangePercent.toFixed(2)}%)
                       </td>
-                      <td style={{ border: '1px solid #ddd', padding: 8 }}>
+
+                      {/* market value */}
+                      <td style={{ border: '1px solid #ddd', padding: 8, color: '#6c757d' }}>
                         ${marketValue.toFixed(2)}
                       </td>
-                      <td style={{ border: '1px solid #ddd', padding: 8, fontSize: 12 }}>
+
+                      {/* last updated */}
+                      <td style={{ border: '1px solid #ddd', padding: 8, fontSize: 12, color: '#6c757d' }}>
                         {r.stockData?.stock?.timestamp ? roundToMinute(r.stockData.stock.timestamp) : '-'}
                         {isStale && r.stockData?.staleWarning && (
                           <div style={{ color: '#856404', marginTop: 2 }}>
@@ -345,6 +363,7 @@ export default function Dashboard() {
                           </div>
                         )}
                       </td>
+
                       <td style={{ border: '1px solid #ddd', padding: 8 }}>
                         <button
                           onClick={() => removeHolding(r.ticker)}
