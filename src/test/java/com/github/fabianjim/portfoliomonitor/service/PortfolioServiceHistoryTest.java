@@ -1,5 +1,6 @@
 package com.github.fabianjim.portfoliomonitor.service;
 
+// troi oi
 import com.github.fabianjim.portfoliomonitor.dto.PortfolioHistoryDTO;
 import com.github.fabianjim.portfoliomonitor.model.Holding;
 import com.github.fabianjim.portfoliomonitor.model.Portfolio;
@@ -9,12 +10,14 @@ import com.github.fabianjim.portfoliomonitor.repository.PortfolioRepository;
 import com.github.fabianjim.portfoliomonitor.repository.StockRepository;
 import com.github.fabianjim.portfoliomonitor.repository.TrackedStockRepository;
 import com.github.fabianjim.portfoliomonitor.repository.UserRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -149,7 +152,7 @@ public class PortfolioServiceHistoryTest {
 
         // Assert
         assertEquals(2, result.size());
-        // First timestamp: (150 * 10) + (200 * 5) = 1500 + 1000 = 2500
+        // First timestamp: 150 * 10 + 200 * 5 = 2500
         assertEquals(2500.0, result.get(0).getPortfolioValue(), 0.01);
         // Second timestamp: (155 * 10) + (205 * 5) = 1550 + 1025 = 2575
         assertEquals(2575.0, result.get(1).getPortfolioValue(), 0.01);
@@ -215,7 +218,7 @@ public class PortfolioServiceHistoryTest {
         // Act
         List<PortfolioHistoryDTO> result = portfolioService.getPortfolioHistory();
 
-        // Assert - should only include data from buy time onward
+        // Assert should only include data from buy time onward, check vals on ui anyway
         assertEquals(2, result.size());
         assertEquals(1500.0, result.get(0).getPortfolioValue(), 0.01); // 150 * 10
         assertEquals(1600.0, result.get(1).getPortfolioValue(), 0.01); // 160 * 10
