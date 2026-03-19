@@ -44,7 +44,7 @@ export default function Dashboard() {
   const hasFetched = useRef(false)
   
   useEffect(() => {
-    document.title = 'Dashboard - Portfolio Monitor'
+    document.title = 'Dashboard'
   }, [])
 
   const handleLogout = async () => {

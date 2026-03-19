@@ -5,7 +5,7 @@ export default function Login() {
   const navigate = useNavigate()
   
   useEffect(() => {
-    document.title = 'Login - Portfolio Monitor'
+    document.title = 'Login'
   }, [])
   
   const [isLogin, setIsLogin] = useState(true)
