@@ -34,3 +34,4 @@ build/
 
 ### Environment Files ###
 application.properties
+application-dev.properties
