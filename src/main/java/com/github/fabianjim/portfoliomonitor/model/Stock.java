@@ -2,8 +2,6 @@ package com.github.fabianjim.portfoliomonitor.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "stocks", 

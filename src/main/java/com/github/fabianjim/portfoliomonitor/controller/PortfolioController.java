@@ -1,5 +1,6 @@
 package com.github.fabianjim.portfoliomonitor.controller;
 
+import com.github.fabianjim.portfoliomonitor.dto.PortfolioHistoryDTO;
 import com.github.fabianjim.portfoliomonitor.model.Holding;
 import com.github.fabianjim.portfoliomonitor.model.Portfolio;
 import com.github.fabianjim.portfoliomonitor.model.TrackedStock;
@@ -65,6 +66,11 @@ public class PortfolioController {
     @GetMapping("/trending")
     public List<TrackedStock> getTrendingStocks() {
         return portfolioService.getTopTrendingStocks(3);
+    }
+
+    @GetMapping("/history")
+    public List<PortfolioHistoryDTO> getPortfolioHistory() {
+        return portfolioService.getPortfolioHistory();
     }
 
 }

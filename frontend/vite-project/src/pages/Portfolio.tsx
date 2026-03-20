@@ -1,8 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Portfolio() {
   const navigate = useNavigate()
+  
+  useEffect(() => {
+    document.title = 'Create Portfolio'
+  }, [])
+  
   const [holdings, setHoldings] = useState<Array<{ ticker: string; shares: string }>>([
     { ticker: '', shares: '' },
   ])

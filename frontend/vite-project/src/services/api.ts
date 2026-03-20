@@ -61,6 +61,9 @@ export const portfolioApi = {
 
   getTrendingStocks: () =>
     apiClient('/portfolio/trending'),
+
+  getPortfolioHistory: () =>
+    apiClient('/portfolio/history'),
 }
 
 // Stock API
