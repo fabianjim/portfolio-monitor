@@ -1,9 +1,4 @@
-/**
- * Central API service for portfolio management
- * Demonstrates clean separation of concerns and error handling
- */
-
-const API_BASE = '/api'
+const API_BASE = 'http://portfolio-monitor-api-env.eba-2mfreswk.us-east-1.elasticbeanstalk.com/api'
 
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
