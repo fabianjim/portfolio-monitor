@@ -9,7 +9,7 @@ tiingo-api-token=${TIINGO_API_TOKEN}
 spring.application.name=portfolio-monitor
 
 # Database 
-spring.datasource.url=jdbc:postgresql://localhost:5432/financial_portfolio_db
+spring.datasource.url=jdbc:postgresql://localhost:1234/your_local_database
 spring.datasource.username=postgres
 spring.datasource.password=your_password
 spring.datasource.driver-class-name=org.postgresql.Driver
