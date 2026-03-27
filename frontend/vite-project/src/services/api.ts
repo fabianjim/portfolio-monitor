@@ -1,4 +1,4 @@
-const API_BASE = 'http://portfolio-monitor-api-env.eba-2mfreswk.us-east-1.elasticbeanstalk.com/api'
+const API_BASE = 'https://portfolio-monitor-api-env.eba-2mfreswk.us-east-1.elasticbeanstalk.com'
 
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
