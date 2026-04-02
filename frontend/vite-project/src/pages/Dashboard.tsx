@@ -460,15 +460,15 @@ export default function Dashboard() {
           zIndex: 1000
         }}>
           <div style={{
-            backgroundColor: 'white',
+            backgroundColor: '#d3d3d3',
             padding: 24,
             borderRadius: 8,
             width: '90%',
             maxWidth: 400
           }}>
-            <h3 style={{ marginTop: 0 }}>Buy Stock</h3>
+            <h3 style={{ marginTop: 0, color: '#494949' }}>Buy Stock</h3>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', marginBottom: 4 }}>Ticker Symbol</label>
+              <label style={{ display: 'block', marginBottom: 4, color: 'grey' }}>Ticker Symbol</label>
               <input
                 type="text"
                 placeholder="e.g., AAPL"
@@ -483,7 +483,7 @@ export default function Dashboard() {
               />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', marginBottom: 4 }}>Shares</label>
+              <label style={{ display: 'block', marginBottom: 4, color: 'grey' }}>Shares</label>
               <input
                 type="number"
                 placeholder="Number of shares"
