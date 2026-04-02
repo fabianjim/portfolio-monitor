@@ -187,7 +187,8 @@ export default function PortfolioChart() {
         alignItems: 'center', 
         justifyContent: 'center',
         backgroundColor: '#f8f9fa',
-        borderRadius: 8 
+        borderRadius: 8,
+        color: '#6c757d'
       }}>
         No historical data available
       </div>
