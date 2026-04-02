@@ -245,6 +245,7 @@ public class PortfolioServiceHistoryTest {
         Stock stock = new Stock();
         stock.setTicker(ticker);
         stock.setTimestamp(timestamp);
+        stock.setHourBucket(timestamp); // For test data, hour bucket matches timestamp
         stock.setCurrentPrice(price);
         stock.setOpen(price);
         stock.setPrevClose(price);

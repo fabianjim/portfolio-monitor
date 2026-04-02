@@ -201,7 +201,7 @@ public class PortfolioService {
 
     /**
      * Calculate portfolio value history for the current user's portfolio.
-     * Returns list of portfolio values at each timestamp where all holdings have data.
+     * Returns list of portfolio values grouped by hour bucket.
      */
     public List<PortfolioHistoryDTO> getPortfolioHistory() {
         Portfolio portfolio = getPortfolio();
@@ -211,8 +211,8 @@ public class PortfolioService {
 
         List<Holding> holdings = portfolio.getHoldings();
         
-        // Map to store all stock data grouped by timestamp
-        Map<Instant, Map<String, Stock>> dataByTimestamp = new HashMap<>();
+        // Map to store all stock data grouped by hour bucket
+        Map<Instant, Map<String, Stock>> dataByHourBucket = new HashMap<>();
         
         // Track which tickers we need data for and their holdings
         Map<String, Holding> holdingsByTicker = new HashMap<>();
@@ -225,31 +225,36 @@ public class PortfolioService {
             List<Stock> stockHistory = stockRepository.findByTickerOrderByTimestampDesc(holding.getTicker());
             
             for (Stock stock : stockHistory) {
+                // Only include INTRADAY and INITIAL data, exclude EOD
+                if (stock.getType() == Stock.StockType.EOD) {
+                    continue;
+                }
+                
                 // Only include data from buy time onward
-                if (!stock.getTimestamp().isBefore(holding.getBuyTimestamp())) {
-                    dataByTimestamp
-                        .computeIfAbsent(stock.getTimestamp(), k -> new HashMap<>())
+                if (!stock.getHourBucket().isBefore(holding.getBuyTimestamp())) {
+                    dataByHourBucket
+                        .computeIfAbsent(stock.getHourBucket(), k -> new HashMap<>())
                         .put(stock.getTicker(), stock);
                 }
             }
         }
 
-        // Calculate portfolio value at each timestamp
+        // Calculate portfolio value at each hour bucket
         List<PortfolioHistoryDTO> result = new ArrayList<>();
         
-        for (Map.Entry<Instant, Map<String, Stock>> entry : dataByTimestamp.entrySet()) {
-            Instant timestamp = entry.getKey();
-            Map<String, Stock> stocksAtTime = entry.getValue();
+        for (Map.Entry<Instant, Map<String, Stock>> entry : dataByHourBucket.entrySet()) {
+            Instant hourBucket = entry.getKey();
+            Map<String, Stock> stocksAtHour = entry.getValue();
             
-            // Check if we have data for all holdings at this timestamp
-            if (stocksAtTime.size() == holdingsByTicker.size()) {
+            // Check if we have data for all holdings at this hour bucket
+            if (stocksAtHour.size() == holdingsByTicker.size()) {
                 double totalValue = 0.0;
                 boolean hasAllData = true;
                 
                 for (Map.Entry<String, Holding> holdingEntry : holdingsByTicker.entrySet()) {
                     String ticker = holdingEntry.getKey();
                     Holding holding = holdingEntry.getValue();
-                    Stock stock = stocksAtTime.get(ticker);
+                    Stock stock = stocksAtHour.get(ticker);
                     
                     if (stock == null) {
                         hasAllData = false;
@@ -260,7 +265,7 @@ public class PortfolioService {
                 }
                 
                 if (hasAllData) {
-                    result.add(new PortfolioHistoryDTO(timestamp, totalValue));
+                    result.add(new PortfolioHistoryDTO(hourBucket, totalValue));
                 }
             }
         }

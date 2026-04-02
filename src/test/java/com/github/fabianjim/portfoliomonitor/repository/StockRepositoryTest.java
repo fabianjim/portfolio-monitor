@@ -21,7 +21,8 @@ class StockRepositoryTest {
     @Test
     void testSaveAndFindStock() {
         // Create a test stock
-        Stock stock = new Stock("TEST", Instant.parse("2024-01-01T00:00:00Z"), 100.0, 99.0, 98.0, 101.0, 97.0, StockType.INITIAL);
+        Instant timestamp = Instant.parse("2024-01-01T00:00:00Z");
+        Stock stock = new Stock("TEST", timestamp, 100.0, 99.0, 98.0, 101.0, 97.0, StockType.INITIAL, timestamp);
         
         // Save the stock
         Stock savedStock = stockRepository.save(stock);

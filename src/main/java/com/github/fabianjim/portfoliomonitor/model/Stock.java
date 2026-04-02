@@ -18,6 +18,9 @@ public class Stock {
     @Column(nullable = false)
     private Instant timestamp;
     
+    @Column(name = "hour_bucket", nullable = false)
+    private Instant hourBucket;
+    
     @Column(name = "current_price", nullable = false)
     private double currentPrice;
     
@@ -39,9 +42,10 @@ public class Stock {
 
     public Stock() {};
 
-    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type) {
+    public Stock(String ticker, Instant timestamp, double currentPrice, double open, double prevClose, double high, double low, StockType type, Instant hourBucket) {
         this.ticker = ticker;
         this.timestamp = timestamp;
+        this.hourBucket = hourBucket;
         this.currentPrice = currentPrice;
         this.open = open;
         this.prevClose = prevClose;
@@ -118,6 +122,14 @@ public class Stock {
 
     public Instant getTimestamp() {
         return timestamp;
+    }
+
+    public Instant getHourBucket() {
+        return hourBucket;
+    }
+
+    public void setHourBucket(Instant hourBucket) {
+        this.hourBucket = hourBucket;
     }
 
     public void setType(StockType type) {
