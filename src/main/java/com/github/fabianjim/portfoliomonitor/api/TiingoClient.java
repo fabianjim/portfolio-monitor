@@ -7,6 +7,8 @@ import com.github.fabianjim.portfoliomonitor.model.Stock.StockType;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -57,7 +59,21 @@ public class TiingoClient implements MarketDataClient {
                 double high = stockNode.get("high").asDouble();
                 double low = stockNode.get("low").asDouble();
 
-                return new Stock(ticker, timestamp, currentPrice, open, prevClose, high, low, type);
+                // Calculate hour bucket
+                Instant hourBucket;
+                if (type == StockType.EOD) {
+                    // EOD data always goes to 4:00 PM
+                    hourBucket = timestamp.truncatedTo(ChronoUnit.DAYS)
+                            .plus(16, ChronoUnit.HOURS);
+                } else {
+                    // Round to nearest hour for INTRADAY and INITIAL
+                    long epochSeconds = timestamp.getEpochSecond();
+                    long hourInSeconds = 3600;
+                    long roundedSeconds = Math.round((double) epochSeconds / hourInSeconds) * hourInSeconds;
+                    hourBucket = Instant.ofEpochSecond(roundedSeconds);
+                }
+
+                return new Stock(ticker, timestamp, currentPrice, open, prevClose, high, low, type, hourBucket);
             }
             else {
                 throw new RuntimeException("Invalid JSON data format for: " + ticker);

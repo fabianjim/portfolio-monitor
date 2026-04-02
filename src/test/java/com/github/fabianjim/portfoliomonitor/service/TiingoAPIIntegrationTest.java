@@ -47,6 +47,7 @@ public class TiingoAPIIntegrationTest {
         Stock mockStock = new Stock();
         mockStock.setCurrentPrice(200);
         mockStock.setTimestamp(Instant.parse("2025-08-01T14:30:00Z"));
+        mockStock.setHourBucket(Instant.parse("2025-08-01T14:00:00Z"));
         mockStock.setOpen(195);
         mockStock.setHigh(201);
         mockStock.setLow(199);
