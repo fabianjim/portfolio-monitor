@@ -291,10 +291,12 @@ export default function PortfolioChart() {
                 tickLine={false}
               />
               <YAxis 
+                domain={['dataMin - 5%', 'dataMax + 5%']}
                 stroke="#6c757d"
                 fontSize={12}
                 tickLine={false}
-                tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                tickFormatter={(value) => formatCurrency(value)}
+                tickCount={3}
               />
               <Tooltip 
                 formatter={(value: number) => [formatCurrency(value), 'Portfolio Value']}
