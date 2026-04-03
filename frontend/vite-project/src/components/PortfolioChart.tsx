@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import {
   LineChart,
   Line,
@@ -27,6 +27,7 @@ export default function PortfolioChart() {
   const [error, setError] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'hourly' | 'daily'>('hourly')
   const [currentDate, setCurrentDate] = useState<Date>(new Date())
+  const hasAnimatedRef = useRef(false)
 
   useEffect(() => {
     loadHistory()
@@ -38,6 +39,9 @@ export default function PortfolioChart() {
       setError(null)
       const history = await portfolioApi.getPortfolioHistory()
       setData(history || [])
+      if (!hasAnimatedRef.current && history && history.length > 0) {
+        hasAnimatedRef.current = true
+      }
     } catch (err) {
       setError('Failed to load portfolio history')
     } finally {
@@ -72,6 +76,7 @@ export default function PortfolioChart() {
         }))
     } else {
       // Show daily aggregation for last 5 trading days
+      // TODO: Only trading days
       const dailyData: { [key: string]: HistoryData } = {}
 
       data.forEach((item) => {
@@ -307,6 +312,8 @@ export default function PortfolioChart() {
                 strokeWidth={2}
                 dot={{ fill: lineColor, strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6, strokeWidth: 0 }}
+                isAnimationActive={!hasAnimatedRef.current}
+                animationDuration={1000}
               />
             </LineChart>
           </ResponsiveContainer>
